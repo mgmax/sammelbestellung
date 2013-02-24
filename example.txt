@@ -1,0 +1,24 @@
+!shop reichelt.de
+# price already includes taxes
+!setfactor 1
+# shipping 6.90€
+!setshipping 6.90
+
+!shop pollin.de
+!setfactor 1
+!setshipping 4.90
+
+# de.rs-online.com currently doesn't work
+# de.farnell.com was never finished
+
+!buyer bob
+!shop reichelt.de
+1; PFL 10
+!shop pollin.de
+1; 810 058
+!buyer troll
+2; reichelt.de; PFL 10
+
+!buyer hering
+!shop reichelt.de
+!basket https://secure.reichelt.de/index.html?;ACTION=20;LA=5010;AWKID=709485;PROVID=2084
