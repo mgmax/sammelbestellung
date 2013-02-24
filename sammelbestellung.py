@@ -705,6 +705,8 @@ try:
 			if cmd=="shop":
 				context.shop=arg
 			elif cmd=="buyer":
+				if (context.buyer!=None):
+					raise Exception("two !buyer s per block are not allowed. please insert an empty line before starting a new buyer.")
 				context.buyer=Buyer(name=arg)
 			elif cmd=="basket":
 				context.basket.add(shopByName(context.shop).fetchBasket(arg))

@@ -16,6 +16,7 @@
 1; PFL 10
 !shop pollin.de
 1; 810 058
+
 !buyer troll
 2; reichelt.de; PFL 10
 
