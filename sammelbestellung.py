@@ -689,8 +689,9 @@ try:
 				logging.debug("finished old buyer from context: " + str(context.buyer))
 			elif context.basket.parts() != []:
 				raise Exception("parts not belonging to anyone - forgot !buyer or added accidental empty line?")
-			if context.basket.parts() != [] and context.shop == None:
-				raise Exception("Missing !shop for this block")
+			for p in context.basket.parts():
+				if p.shop == None:
+					raise Exception("Some parts have no shop in this block - Missing !shop ?")
 			context=ParseContext()
 			logging.debug("reset context")
 		elif (re.match("^#.*", line)):
