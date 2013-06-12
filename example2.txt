@@ -19,7 +19,7 @@
 1; 810 058
 
 !buyer troll
-2;  reichelt.de;    PFL 10     
+2;  reichelt.de;    ENTLÖTLITZE 00     
 
 !buyer hering
 !shop reichelt.de

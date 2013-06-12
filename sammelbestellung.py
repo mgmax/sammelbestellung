@@ -266,7 +266,7 @@ class PriceFetcherReichelt(PriceFetcher):
 		s=""
 		for p in b.parts():
 			s += "%s;%d\n" % (p.partNr, p.count)
-		return [s,".csv"]
+		return [s.encode("iso8859-15"),".csv"]
 
 
 class PriceFetcherFarnell(PriceFetcherReichelt):
@@ -875,11 +875,16 @@ try:
 			outputs["unpackinglist"] +=  "%s\t☐\t%d\t%s\t%s\t%s\n" % (b.name,p.count,totalCountStr,p.partNr,p.shop)
 	outputs["unpackinglist"]=groupLines(tabsToFixedWidth(outputs["unpackinglist"]))
 	outputs["unpackinglist"]=header("unpacking list") + outputs["unpackinglist"]
-	
-	
-	
-		
-	
+	outputs["shopTotalBaskets"]="shop\t☒OK\tcount\tpartNr\n";
+	totalBasketsLines=[];
+	for i in totalBasket.parts():
+	    totalBasketsLines.append("%s\t☐\t%s\t%s\t\n" % (i.shop,  i.count, i.partNr))
+	totalBasketsLines.sort()
+	for l in totalBasketsLines:
+	    outputs["shopTotalBaskets"] += l
+	outputs["shopTotalBaskets"]=groupLines(tabsToFixedWidth(outputs["shopTotalBaskets"]))
+	outputs["shopTotalBaskets"]=header("Complete basket for each shop (for checking if everything was received correctly)") + outputs["shopTotalBaskets"]
+    
 	basename=sys.argv[1]+"-output-"
 	for (filename, content) in outputs.items():
 		if (not ('.' in filename)):
