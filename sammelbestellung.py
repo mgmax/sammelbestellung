@@ -151,7 +151,7 @@ class PriceFetcherReichelt(PriceFetcher):
 	
 	# change these (and some functions) for another shop
 	name="reichelt.de"
-	parseSumRegexp=r".+Summe: (?P<price>\d+,\d+) &euro;.+"
+	parseSumRegexp=r".+Summe: <span id=\"basketsum\">(?P<price>\d+,\d+)</span> &euro;.+"
 	parseSumDecimal=","
 	parseSumIgnore="."
 
