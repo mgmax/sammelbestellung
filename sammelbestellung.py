@@ -630,11 +630,14 @@ class Basket(object):
 		return r
 
 class Buyer:
-	def __init__(self,name=None,basket=None):
+	def __init__(self,name=None,mail=None,basket=None):
 		self.basket=basket
 		if self.basket==None:
 			self.basket=Basket()
 		self.name=name
+		self.mail=mail
+		if self.mail==None:
+			self.mail="NOMAIL"
 		self.shopFinalSums={}
 		self.shopShipping={}
 		self.totalShipping=None
@@ -709,6 +712,10 @@ try:
 				if (context.buyer!=None):
 					raise Exception("two !buyer s per block are not allowed. please insert an empty line before starting a new buyer.")
 				context.buyer=Buyer(name=arg)
+			elif cmd=="mail":
+				if (context.buyer==None):
+					raise Exception("you should specify the mail-address only after a buyer.")
+				context.buyer.mail=arg
 			elif cmd=="basket":
 				context.basket.add(shopByName(context.shop).fetchBasket(arg))
 			elif cmd=="warning":
