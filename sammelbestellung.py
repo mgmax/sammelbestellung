@@ -648,6 +648,17 @@ class Buyer:
 		return "<Buyer, name '"+ str(self.name) + "', basket  "+str(self.basket)+" >"
 	def __repr__(self):
 		return str(self)
+	
+# needed for From-Field of mail	
+class Origin:
+	def __init__(self,mail=None):
+		self.mail=mail
+		if self.mail==None:
+			self.mail="John Doe <john.doe@example.org>"
+	def __str__(self):
+		return self.mail
+	def __repr__(self):
+		return(self)
 
 try:
 	reload(sys)
@@ -678,6 +689,7 @@ try:
 			self.basket=Basket()
 	context=ParseContext()
 	buyers=[]
+	origin=None # for From-field of mail
 	lines=f.readlines() + [""] # add empty line at end
 	for line in lines:
 		line=removeChars(line,"\r\n")
@@ -732,6 +744,10 @@ try:
 				shopByName(context.shop).factor=factor
 			elif cmd=="setshipping":
 				shopByName(context.shop).shipping=float(arg)
+			elif cmd=="origin":
+				if (origin!=None):
+					raise Exception("you may not specify more than one origin")
+				origin = Origin(mail=arg)
 			else:
 				raise Exception("unknown command " + str(cmd))
 		elif (shortItemMatch or itemMatch):
@@ -896,7 +912,9 @@ try:
 	
 	logging.info("generating mail")
 	msg = MIMEMultipart()
-	msg['From'] = "patrick.kanzler@fablab.fau.de"
+	if (origin==None):
+		origin = Origin()
+	msg['From'] = str(origin)
 	msg_to = ""
 	for b in buyers:
 		msg_to += b.name + " <" + b.mail + ">, "
