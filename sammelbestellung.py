@@ -920,8 +920,10 @@ try:
 		msg_to += b.name + " <" + b.mail + ">, "
 	msg['To'] = msg_to
 	msg['Subject'] = "Sammelbestellung " + sys.argv[1]
-	text = "Hallo, die Sammelbestellung wurde losgeschickt."
-	text += "Bitte überweist gemäß der untenstehenden Tabelle an folgendes Konto."
+	try:
+		text = open('emailtext.txt', 'r').read()
+	except IOError:
+		text = "This text will be replaced by emailtext.txt in the same directory as sammelbestellung.py"
 	text += header("total sum")
 	text += "Name\ttotal\t(items+shipping)\n"
 	for b in buyers:
