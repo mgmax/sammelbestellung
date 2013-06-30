@@ -1,3 +1,6 @@
+# origin is the mail-address that will go into the FROM-Field, you can leave this out
+!origin John Doe <john.doe@example.org>
+
 # more complicated example that shows the different formatting possibilities for items (tab or semicolon, as much additional whitespace as you like)
 !shop reichelt.de
 # price already includes taxes
@@ -13,12 +16,14 @@
 # de.farnell.com was never finished
 
 !buyer bob
+!mail bob@somewhere.org
 !shop reichelt.de
 1; PFL 10
 !shop pollin.de
 1; 810 058
 
 !buyer troll
+#if you don't care for the generation of an eml, you can just leave out the mail-address
 2;  reichelt.de;    ENTLÖTLITZE 00     
 
 !buyer hering

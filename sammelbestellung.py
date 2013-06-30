@@ -5,6 +5,7 @@
 # https://github.com/mgmax/sammelbestellung
 # 
 # (c) 2013 Max Gaukler <development@maxgaukler.de>
+# EML-Output (c) 2013 Patrick Kanzler <patrick.kanzler@fablab.fau.de>
 #
 # some parts based on Part-DB autoprice - price fetcher
 # (c) 2009 Michael Buesch <mb@bu3sch.de>

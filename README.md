@@ -4,7 +4,7 @@ sammelbestellung
 A python script for accounting group orders. Order together and save shipping costs!
 
 <h2>Usage</h2>
-- Collect order in a standardized text format (see example.txt) 
+- Collect order in a standardized text format (see example.txt and example2.txt) 
 - Run python sammelbestellung.py your-order.txt
 - The script generates:
  - files for importing the total basket
@@ -12,6 +12,7 @@ A python script for accounting group orders. Order together and save shipping co
  - a checklist for unpacking the parcel ("How many pieces of this article go to person A?")
 - Import the basket into the shops, see if the total sum including shipping is correct
 - Start the order
+- Use the autmatically generated mail to inform the buyers
 - When the parcel arrives, each buyer takes out his things and checks them off on the unpacking list
 
 <h2>Supported shops</h2>
@@ -46,3 +47,9 @@ A python script for accounting group orders. Order together and save shipping co
    	hering   ☐     1                       NE 555 DIP   reichelt.de   
    
    	hering   ☐     1                       SK M3        reichelt.de   
+
+<h2>EML Output</h2>
+- your order-file should contain a mail-adress for every buyer
+- a .eml-file will be generated
+- open in Thunderbird (please contact, if other mailing programms do not work)
+- press Ctrl-E to edit as new
