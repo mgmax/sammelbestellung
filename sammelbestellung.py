@@ -891,6 +891,21 @@ try:
 	    outputs["shopTotalBaskets"] += l
 	outputs["shopTotalBaskets"]=groupLines(tabsToFixedWidth(outputs["shopTotalBaskets"]))
 	outputs["shopTotalBaskets"]=header("Complete basket for each shop (for checking if everything was received correctly)") + outputs["shopTotalBaskets"]
+	
+	outputs["mail.eml"] = "Mail"
+	outputs["mail.eml"] += "Adressen"
+	for b in buyers:
+		outputs["mail.eml"] += b.name + " <" + b.mail + ">, "
+	outputs["mail.eml"] += header("total sum")
+	outputs["mail.eml"] += "Name\ttotal\t(items+shipping)\n"
+	for b in buyers:
+		outputs["mail.eml"] += "%s\t%.2f\t(%.2f+%.2f)\n" % (b.name, b.finalSum,b.finalSum-b.totalShipping,b.totalShipping)
+	
+	outputs["mail.eml"] += header("shops")
+	outputs["mail.eml"] += "Shop\tSum with shipping\t(items + shipping)\n"
+	for (shop, s) in totalSums.items():
+		outputs["mail.eml"] += "%s\t%.2f\t(%.2f+%.2f)\n" % (shop, s,s-shopByName(shop).shipping,shopByName(shop).shipping)
+		
     
 	basename=sys.argv[1]+"-output-"
 	for (filename, content) in outputs.items():
