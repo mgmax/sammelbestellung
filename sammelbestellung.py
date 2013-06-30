@@ -922,7 +922,7 @@ try:
 	msg['To'] = msg_to
 	msg['Subject'] = "Sammelbestellung " + sys.argv[1]
 	try:
-		text = open('emailtext.txt', 'r').read()
+		text = open(sys.path[0]+'/emailtext.txt', 'r').read()
 	except IOError:
 		text = "This text will be replaced by emailtext.txt in the same directory as sammelbestellung.py"
 	text += header("total sum")
