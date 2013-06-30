@@ -1,4 +1,4 @@
-# origin is the mail-address that will go into the FROM-Field, you can leave this out
+# origin is the mail-address that will go into the FROM-Field, you can leave this out (in fact it is just eye-candy)
 !origin John Doe <john.doe@example.org>
 
 # more complicated example that shows the different formatting possibilities for items (tab or semicolon, as much additional whitespace as you like)
