@@ -22,6 +22,8 @@ import time
 import logging
 import cookielib, urllib2
 import copy
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 defaultHttpHeader = \
 	{ "User-Agent": "Mozilla/5.0 (X11; U; Linux ppc; en-US; rv:1.9.0.12) " +\
@@ -885,27 +887,34 @@ try:
 	outputs["shopTotalBaskets"]="shop\t☒OK\tcount\tpartNr\n";
 	totalBasketsLines=[];
 	for i in totalBasket.parts():
-	    totalBasketsLines.append("%s\t☐\t%s\t%s\t\n" % (i.shop,  i.count, i.partNr))
+		totalBasketsLines.append("%s\t☐\t%s\t%s\t\n" % (i.shop,  i.count, i.partNr))
 	totalBasketsLines.sort()
 	for l in totalBasketsLines:
-	    outputs["shopTotalBaskets"] += l
+		outputs["shopTotalBaskets"] += l
 	outputs["shopTotalBaskets"]=groupLines(tabsToFixedWidth(outputs["shopTotalBaskets"]))
 	outputs["shopTotalBaskets"]=header("Complete basket for each shop (for checking if everything was received correctly)") + outputs["shopTotalBaskets"]
 	
-	outputs["mail.eml"] = "Mail"
-	outputs["mail.eml"] += "Adressen"
+	logging.info("generating mail")
+	msg = MIMEMultipart()
+	msg['From'] = "patrick.kanzler@fablab.fau.de"
+	msg_to = ""
 	for b in buyers:
-		outputs["mail.eml"] += b.name + " <" + b.mail + ">, "
-	outputs["mail.eml"] += header("total sum")
-	outputs["mail.eml"] += "Name\ttotal\t(items+shipping)\n"
+		msg_to += b.name + " <" + b.mail + ">, "
+	msg['To'] = msg_to
+	msg['Subject'] = "Sammelbestellung " + sys.argv[1]
+	text = "Hallo, die Sammelbestellung wurde losgeschickt."
+	text += "Bitte überweist gemäß der untenstehenden Tabelle an folgendes Konto."
+	text += header("total sum")
+	text += "Name\ttotal\t(items+shipping)\n"
 	for b in buyers:
-		outputs["mail.eml"] += "%s\t%.2f\t(%.2f+%.2f)\n" % (b.name, b.finalSum,b.finalSum-b.totalShipping,b.totalShipping)
-	
-	outputs["mail.eml"] += header("shops")
-	outputs["mail.eml"] += "Shop\tSum with shipping\t(items + shipping)\n"
+		text += "%s\t%.2f\t(%.2f+%.2f)\n" % (b.name, b.finalSum,b.finalSum-b.totalShipping,b.totalShipping)
+	text += header("shops")
+	text += "Shop\tSum with shipping\t(items + shipping)\n"
 	for (shop, s) in totalSums.items():
-		outputs["mail.eml"] += "%s\t%.2f\t(%.2f+%.2f)\n" % (shop, s,s-shopByName(shop).shipping,shopByName(shop).shipping)
-		
+		text += "%s\t%.2f\t(%.2f+%.2f)\n" % (shop, s,s-shopByName(shop).shipping,shopByName(shop).shipping)
+	msg.attach(MIMEText(text.encode('utf-8'), 'plain', 'UTF-8'))
+	outputs["mail.eml"] = str(msg)
+    
     
 	basename=sys.argv[1]+"-output-"
 	for (filename, content) in outputs.items():
