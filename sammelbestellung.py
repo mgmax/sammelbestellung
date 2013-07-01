@@ -13,6 +13,7 @@
 # Licensed under the GNU/GPL version 2 or (at your option) any later version
 """
 
+import os
 import sys
 import getopt
 import httplib
@@ -920,7 +921,8 @@ try:
 	for b in buyers:
 		msg_to += b.name + " <" + b.mail + ">, "
 	msg['To'] = msg_to
-	msg['Subject'] = "Sammelbestellung " + sys.argv[1]
+	order_name = os.path.splitext(sys.argv[1])[0]
+	msg['Subject'] = "Sammelbestellung " + order_name
 	try:
 		text = open(sys.path[0]+'/emailtext.txt', 'r').read()
 	except IOError:
