@@ -53,6 +53,7 @@ A python script for accounting group orders. Order together and save shipping co
 - a .eml-file will be generated
 - open in Thunderbird (please contact, if other mailing programms do not work)
 - press Ctrl-E to edit as new
+
 <h2>Output into subdirectory</h2>
 - add "!subdir true" to your basket-file
 - the script will write the output to the directory "filename-output"
