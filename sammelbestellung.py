@@ -669,7 +669,6 @@ class Settings:
 		self.mailtext="emailtext.txt"
 		self.subdir=False
 		self.billing=False
-		#WORK
 
 try:
 	reload(sys)
@@ -769,6 +768,13 @@ try:
 					raise Exception("write 'subdir true or false' (lower case)")
 			elif cmd=="mailtext":
 				settings.mailtext=arg
+			elif cmd=="billing":
+				if arg=="true":
+					settings.billing = True
+				elif arg=="false":
+					settings.billing = False
+				else:
+					raise Exception("write 'billing true or false' (lower case)")
 			else:
 				raise Exception("unknown command " + str(cmd))
 		elif (shortItemMatch or itemMatch):
@@ -957,6 +963,11 @@ try:
 	msg.attach(MIMEText(text.encode('utf-8'), 'plain', 'UTF-8'))
 	outputs["mail.eml"] = str(msg)
     
+	if settings.billing:
+		logging.info("should generate bills")
+		
+		
+		
 	subdirectory=""
 	if (settings.subdir):
 		subdirectory = sys.argv[1] + "-output"
@@ -974,6 +985,11 @@ try:
 		f=open(basename+filename,'w')
 		f.write(content)
 		f.close()
+		
+	if settings.billing:
+		logging.info("trying to build latex")
+		
+		
 	print "Success!"
 	sys.exit(0)
 	
