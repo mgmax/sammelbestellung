@@ -29,6 +29,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import subprocess
 import shlex
+from string import Template
 
 defaultHttpHeader = \
 	{ "User-Agent": "Mozilla/5.0 (X11; U; Linux ppc; en-US; rv:1.9.0.12) " +\
@@ -971,19 +972,19 @@ try:
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{ngerman,ae,times,graphicx,url} 
-\KOMAoptions{paper=a4,fromalign=center,
+\KOMAoptions{paper=a4,fromalign=right,
 backaddress=true,parskip=half,enlargefirstpage=true,
-fromphone=true,fromemail=true,fromrule=true} 
+fromphone=false,fromemail=false,fromrule=false} 
  
 % hier Name und darunter Anschrift einsetzen:
-\setkomavar{fromname}{Patrick Kanzler} 		
+\setkomavar{fromname}{$NAME} 		
 \setkomavar{fromaddress}{123 Straße\\
                         irendwo} 
 \setkomavar{fromphone}{Telephon}
-\setkomavar{fromemail}{patrick.kanzler@fablab.fau.de}
+\setkomavar{fromemail}{$MAIL_S}
  
-\setkomavar{signature}{Patrick Kanzler}		
-\setkomavar{subject}{Reicheltbestellung}
+\setkomavar{signature}{$NAME}		
+\setkomavar{subject}{$SUBJECT}
 \setkomavar{place}{Stein} 
 \setkomavar{date}{\today}
 \let\raggedsignature=\raggedright		
@@ -994,9 +995,8 @@ fromphone=true,fromemail=true,fromrule=true}
  
 \begin{document}
  % die Anschrift des Empfaengers
- \begin{letter}{Arvato Services Solutions GmbH\\
-ASUS RMA Reparatur\\
-Wiesenring 16\\
+ \begin{letter}{Max Mustermann\\
+Blabla\\
 Erlangen} 		
  
 \opening{Sehr geehrte BlaBla}
@@ -1005,6 +1005,8 @@ Blab bla rechnung
 \end{letter}
 \end{document}
 '''
+		t = Template(content)
+		content = t.substitute({'SUBJECT': 'Reicheltbestellung ' + order_name, 'NAME': "Patrick Kanzler", 'MAIL_S': str(origin)})
 		outputs["bill.tex"] = content
 		
 		
@@ -1046,6 +1048,7 @@ Blab bla rechnung
 	#TODO Posten ausrechnen und malen
 	#TODO Betreffzeile generieren
 	#TODO pdflatex vorsichtig suchen?
+	#TODO Origin-Syntax ändern: Name, Mail, Adresse einzeln
 
 except Exception, e:
 	#pass
