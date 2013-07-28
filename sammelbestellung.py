@@ -5,7 +5,7 @@
 # https://github.com/mgmax/sammelbestellung
 # 
 # (c) 2013 Max Gaukler <development@maxgaukler.de>
-# EML-Output (c) 2013 Patrick Kanzler <patrick.kanzler@fablab.fau.de>
+# EML-Output, subdir (c) 2013 Patrick Kanzler <patrick.kanzler@fablab.fau.de>
 #
 # some parts based on Part-DB autoprice - price fetcher
 # (c) 2009 Michael Buesch <mb@bu3sch.de>
@@ -14,6 +14,7 @@
 """
 
 import os
+import shutil
 import sys
 import getopt
 import httplib
@@ -651,7 +652,7 @@ class Buyer:
 	def __repr__(self):
 		return str(self)
 	
-# needed for From-Field of mail	
+# needed for From-Field of mail
 class Origin:
 	def __init__(self,mail=None):
 		self.mail=mail
@@ -661,6 +662,14 @@ class Origin:
 		return self.mail
 	def __repr__(self):
 		return(self)
+		
+# organizes settings
+class Settings:
+	def __init__(self):
+		self.mailtext="emailtext.txt"
+		self.subdir=False
+		self.billing=False
+		#WORK
 
 try:
 	reload(sys)
@@ -692,6 +701,7 @@ try:
 	context=ParseContext()
 	buyers=[]
 	origin=None # for From-field of mail
+	settings=Settings() # for settings like subdir
 	lines=f.readlines() + [""] # add empty line at end
 	for line in lines:
 		line=removeChars(line,"\r\n")
@@ -750,6 +760,14 @@ try:
 				if (origin!=None):
 					raise Exception("you may not specify more than one origin")
 				origin = Origin(mail=arg)
+			elif cmd=="subdir":
+				if arg=="true":
+					settings.subdir = True
+				elif arg=="false":
+					settings.subdir = False
+				else:
+					raise Exception("write 'subdir true or false' (lower case)")
+				#WORK
 			else:
 				raise Exception("unknown command " + str(cmd))
 		elif (shortItemMatch or itemMatch):
@@ -938,8 +956,17 @@ try:
 	msg.attach(MIMEText(text.encode('utf-8'), 'plain', 'UTF-8'))
 	outputs["mail.eml"] = str(msg)
     
-    
-	basename=sys.argv[1]+"-output-"
+	subdirectory=""
+	if (settings.subdir):
+		subdirectory = sys.argv[1] + "-output"
+		try:
+			#TODO ordentlich machen
+			shutil.rmtree(subdirectory)
+			os.mkdir(subdirectory)
+		except OSError as e:
+			raise
+		subdirectory = subdirectory + os.sep
+	basename=subdirectory+sys.argv[1]+"-output-"
 	for (filename, content) in outputs.items():
 		if (not ('.' in filename)):
 			filename = filename + ".txt"
