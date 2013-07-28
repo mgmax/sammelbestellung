@@ -27,6 +27,8 @@ import cookielib, urllib2
 import copy
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import subprocess
+import shlex
 
 defaultHttpHeader = \
 	{ "User-Agent": "Mozilla/5.0 (X11; U; Linux ppc; en-US; rv:1.9.0.12) " +\
@@ -965,18 +967,56 @@ try:
     
 	if settings.billing:
 		logging.info("should generate bills")
+		content=r'''\documentclass[fontsize=12pt]{scrlttr2} 
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{ngerman,ae,times,graphicx,url} 
+\KOMAoptions{paper=a4,fromalign=center,
+backaddress=true,parskip=half,enlargefirstpage=true,
+fromphone=true,fromemail=true,fromrule=true} 
+ 
+% hier Name und darunter Anschrift einsetzen:
+\setkomavar{fromname}{Patrick Kanzler} 		
+\setkomavar{fromaddress}{123 Straße\\
+                        irendwo} 
+\setkomavar{fromphone}{Telephon}
+\setkomavar{fromemail}{patrick.kanzler@fablab.fau.de}
+ 
+\setkomavar{signature}{Patrick Kanzler}		
+\setkomavar{subject}{Reicheltbestellung}
+\setkomavar{place}{Stein} 
+\setkomavar{date}{\today}
+\let\raggedsignature=\raggedright		
+ 
+% Manche finden, dass scrlttr2 so eine riesige Fußzeile hat 
+% einfach die nächste Zeile auskommentieren, dann wird sie kleiner:
+% \setlength{\footskip}{-6pt}	    
+ 
+\begin{document}
+ % die Anschrift des Empfaengers
+ \begin{letter}{Arvato Services Solutions GmbH\\
+ASUS RMA Reparatur\\
+Wiesenring 16\\
+Erlangen} 		
+ 
+\opening{Sehr geehrte BlaBla}
+Blab bla rechnung 
+\closing{Greetings,}
+\end{letter}
+\end{document}
+'''
+		outputs["bill.tex"] = content
 		
 		
 		
 	subdirectory=""
 	if (settings.subdir):
-		subdirectory = sys.argv[1] + "-output"
+		subdirectory = os.path.splitext(sys.argv[1])[0] + "-output"
 		try:
 			#TODO ordentlich machen
-			shutil.rmtree(subdirectory)
 			os.mkdir(subdirectory)
 		except OSError as e:
-			raise
+			logging.info("directory seems to exist")
 		subdirectory = subdirectory + os.sep
 	basename=subdirectory+sys.argv[1]+"-output-"
 	for (filename, content) in outputs.items():
@@ -987,13 +1027,25 @@ try:
 		f.close()
 		
 	if settings.billing:
-		logging.info("trying to build latex")
-		
+		logging.info("trying to build all latexfiles")
+		os.chdir(subdirectory)
+		for files in os.listdir("."):
+			if files.endswith(".tex"):
+				proc=subprocess.Popen(shlex.split('pdflatex ' + files))
+				proc.communicate()
+				#achtung bei non-subdir: baut ALLES (weniger greedy machen?)
+			
 		
 	print "Success!"
 	sys.exit(0)
 	
 	# TODO Mindeststückzahl-Error bei Rei? und RS
+	
+	#TODO Adresse bei Buyer
+	#TODO Adresse des Bestellers
+	#TODO Posten ausrechnen und malen
+	#TODO Betreffzeile generieren
+	#TODO pdflatex vorsichtig suchen?
 
 except Exception, e:
 	#pass
