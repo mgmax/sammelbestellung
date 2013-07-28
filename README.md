@@ -59,3 +59,6 @@ A python script for accounting group orders. Order together and save shipping co
 - add "!subdir true" to your basket-file
 - the script will write the output to the directory "filename-output"
 - the "!subdir"-cmd is optional an takes the values "true" and "false"
+
+<h2>Bills</h2>
+- generates bills for every buyer
