@@ -767,7 +767,8 @@ try:
 					settings.subdir = False
 				else:
 					raise Exception("write 'subdir true or false' (lower case)")
-				#WORK
+			elif cmd=="mailtext":
+				settings.mailtext=arg
 			else:
 				raise Exception("unknown command " + str(cmd))
 		elif (shortItemMatch or itemMatch):
@@ -942,7 +943,7 @@ try:
 	order_name = os.path.splitext(sys.argv[1])[0]
 	msg['Subject'] = "Sammelbestellung " + order_name
 	try:
-		text = open(sys.path[0]+'/emailtext.txt', 'r').read()
+		text = open(sys.path[0]+'/'+settings.mailtext, 'r').read()
 	except IOError:
 		text = "This text will be replaced by emailtext.txt in the same directory as sammelbestellung.py"
 	text += header("total sum")
