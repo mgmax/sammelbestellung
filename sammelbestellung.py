@@ -1001,14 +1001,33 @@ Erlangen}
  
 \opening{Sehr geehrte BlaBla}
 Blab bla rechnung 
+DU WIRST BEZAHLEN!
+
+$TABLE
 \closing{Greetings,}
 \end{letter}
 \end{document}
 '''
-		t = Template(content)
-		content = t.substitute({'SUBJECT': 'Reicheltbestellung ' + order_name, 'NAME': "Patrick Kanzler", 'MAIL_S': str(origin)})
-		outputs["bill.tex"] = content
-		
+		for b in buyers:
+			logging.info("generating bill for " + b.name)
+			tabledata=""
+			tabledata += "%s\t%.2f\t(%.2f+%.2f)\n" % (b.name, b.finalSum,b.finalSum-b.totalShipping,b.totalShipping)
+			
+			for p in b.basket.parts():
+				tabledata +=  "%s\t%d\t%.3f\t%.4f\t%s\t%s\n" % (b.name,p.count,p.price,shopByName(p.shop).factor,p.partNr,p.shop)
+			for (shop, s) in b.shopFinalSums.items():
+				tabledata +=  "%s\t1\t%.3f\t1\t<ShippingPart>\t%s\n" % (b.name,b.shopShipping[shop],shop)
+				tabledata +=  "%s\t\t%.3f\t1\t<ShopTotal>\t%s\n" % (b.name, s, shop)
+			
+			t = Template(content)
+			content_out = t.substitute({'SUBJECT': 'Reicheltbestellung ' + order_name, 'NAME': "Patrick Kanzler", 'MAIL_S': str(origin), 'TABLE': tabledata})
+			outputs["bill." + b.name + ".tex"] = content_out
+			logging.info("bill " + b.name + " done")
+			
+			#id, einzelpreis, anzahl, gesamtpreis
+			#subtotal, versananteil von gesamt und total
+			#"zwischensumme 42€ (17% der gesamten bestellung), versandanteil 5,90*17%=..."
+			
 		
 		
 	subdirectory=""
@@ -1033,7 +1052,7 @@ Blab bla rechnung
 		os.chdir(subdirectory)
 		for files in os.listdir("."):
 			if files.endswith(".tex"):
-				proc=subprocess.Popen(shlex.split('pdflatex ' + files))
+				proc=subprocess.Popen(shlex.split('pdflatex "' + files + '"'))
 				proc.communicate()
 				#achtung bei non-subdir: baut ALLES (weniger greedy machen?)
 			
