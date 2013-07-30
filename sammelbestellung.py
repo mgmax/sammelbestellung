@@ -660,9 +660,12 @@ class Origin:
 	def __init__(self,mail=None):
 		self.mail=mail
 		if self.mail==None:
-			self.mail="John Doe <john.doe@example.org>"
+			self.mail="john.doe@example.org"
+		self.name="John Doe"
+		self.street="Apfelstraße 23"
+		self.city="Heidenheim"
 	def __str__(self):
-		return self.mail
+		return self.name + " <" + self.mail + ">"
 	def __repr__(self):
 		return(self)
 		
@@ -759,9 +762,26 @@ try:
 			elif cmd=="setshipping":
 				shopByName(context.shop).shipping=float(arg)
 			elif cmd=="origin":
+				#deprecated
 				if (origin!=None):
 					raise Exception("you may not specify more than one origin")
 				origin = Origin(mail=arg)
+			elif cmd=="originname":
+				if (origin==None):
+					origin = Origin()
+				origin.name = arg
+			elif cmd=="originmail":
+				if (origin==None):
+					origin = Origin()
+				origin.mail = arg
+			elif cmd=="originstreet":
+				if (origin==None):
+					origin = Origin()
+				origin.street = arg
+			elif cmd=="origincity":
+				if (origin==None):
+					origin = Origin()
+				origin.city = arg				
 			elif cmd=="subdir":
 				if arg=="true":
 					settings.subdir = True
@@ -978,8 +998,8 @@ fromphone=false,fromemail=false,fromrule=false}
  
 % hier Name und darunter Anschrift einsetzen:
 \setkomavar{fromname}{$NAME} 		
-\setkomavar{fromaddress}{123 Straße\\
-                        irendwo} 
+\setkomavar{fromaddress}{$STREET\\
+                        $CITY} 
 \setkomavar{fromphone}{Telephon}
 \setkomavar{fromemail}{$MAIL_S}
  
@@ -1020,7 +1040,7 @@ $TABLE
 				tabledata +=  "%s\t\t%.3f\t1\t<ShopTotal>\t%s\n" % (b.name, s, shop)
 			
 			t = Template(content)
-			content_out = t.substitute({'SUBJECT': 'Reicheltbestellung ' + order_name, 'NAME': "Patrick Kanzler", 'MAIL_S': str(origin), 'TABLE': tabledata})
+			content_out = t.substitute({'SUBJECT': 'Reicheltbestellung ' + order_name, 'NAME': origin.name, 'STREET': origin.street, 'CITY': origin.city, 'MAIL_S': str(origin), 'TABLE': tabledata})
 			outputs["bill." + b.name + ".tex"] = content_out
 			logging.info("bill " + b.name + " done")
 			
