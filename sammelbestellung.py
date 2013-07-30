@@ -1085,9 +1085,8 @@ $TABLE
 	#TODO Adresse bei Buyer
 	#TODO Adresse des Bestellers
 	#TODO Posten ausrechnen und malen
-	#TODO Betreffzeile generieren
 	#TODO pdflatex vorsichtig suchen?
-	#TODO Origin-Syntax ändern: Name, Mail, Adresse einzeln
+	#TODO extra config-Datei?
 
 except Exception, e:
 	#pass
