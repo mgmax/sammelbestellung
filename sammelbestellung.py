@@ -1006,7 +1006,7 @@ try:
 		content=r'''\documentclass[fontsize=12pt]{scrlttr2} 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{ngerman,ae,times,graphicx,url,microtype,tabularx,eurosym} 
+\usepackage{ngerman,ae,times,graphicx,url,microtype,tabularx,eurosym,longtable} 
 \KOMAoptions{paper=a4,fromalign=right,
 backaddress=true,parskip=half,enlargefirstpage=true,
 fromphone=false,fromemail=false,fromrule=false,firstfoot=true,draft=true} 
@@ -1035,7 +1035,7 @@ Erlangen}
  
  \setkomavar{invoice}{$INVOICE}
  %---------------------------------------------------------------------------
-\setkomavar{firstfoot}{
+\setkomavar{firstfoot}{\tiny {
 \rule[3pt]{\textwidth}{.4pt} \\
 \begin{tabular}[t]{l@{}}% 
 \usekomavar{fromname}\\
@@ -1051,7 +1051,7 @@ Erlangen}
 Bankverbindung: \\
 \usekomavar{frombank}
 \end{tabular}%
-}
+}}
 %---------------------------------------------------------------------------
 % Bankverbindung
 \setkomavar{frombank}{Kto. $KTO\\
@@ -1063,7 +1063,8 @@ $BANK}
 diese Rechnung weist Ihren Anteil der Sammelbestellung auf. Die Posten sind der Hauptrechnung entnommen und die Versandkosten werden anteilig aufgeteilt. Bitte zahlen Sie die aufgeführte Gesamtsumme per Überweisung an das unten genannte Konto.
 
 \vspace{5pt}
-\begin{tabularx}{\textwidth}{cXrr}
+%\begin{tabularx}{\textwidth}{cXrr}
+\begin{longtable}{ccrr}
 \hline
 %\rowcolor[gray]{.95}
 \tiny {Menge} & \tiny {ID} & \tiny {Einzelpreis} & \tiny {Gesamtpreis} \\ \hline
@@ -1072,7 +1073,8 @@ $TABLE \hline
 \multicolumn{ 3}{l}{\small{Zwischensumme, $PERCENTAGE\% der Gesamtbestellung ($GLOBTOTAL \euro)}} & $TOTWOSHIP \euro\\ \hline
 \multicolumn{ 3}{l}{\small{Versand ($PERCENTAGE\% des Gesamtversandes $TOTALSHIP \euro)}} & $PARTSHIP \euro \\ \hline \hline
 \multicolumn{ 3}{l}{ \textbf{Gesamtsumme} } & \textbf{$TOTAL \euro} \\ \hline
-\end{tabularx}
+%\end{tabularx}
+\end{longtable}
 
 
 \closing{Mit freundlichen Grüßen}
@@ -1149,9 +1151,10 @@ $TABLE \hline
 		os.chdir(subdirectory)
 		for files in os.listdir("."):
 			if files.endswith(".tex"):
-				proc=subprocess.Popen(shlex.split('pdflatex "' + files + '"'))
-				proc.communicate()
-				#achtung bei non-subdir: baut ALLES (weniger greedy machen?)
+				for i in range(0, 2):
+					proc=subprocess.Popen(shlex.split('pdflatex "' + files + '"'))
+					proc.communicate()
+					#achtung bei non-subdir: baut ALLES (weniger greedy machen?)
 			
 		
 	print "Success!"
