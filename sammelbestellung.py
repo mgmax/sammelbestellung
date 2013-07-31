@@ -667,6 +667,7 @@ class Origin:
 		self.kto= "123456789"
 		self.blz="123\,123\,12"
 		self.bank="Musterbank"
+		self.phone="0190\,666\,666"
 	def __str__(self):
 		return self.name + " <" + self.mail + ">"
 	def __repr__(self):
@@ -796,7 +797,11 @@ try:
 			elif cmd=="originbank":
 				if (origin==None):
 					origin = Origin()
-				origin.bank = arg							
+				origin.bank = arg	
+			elif cmd=="originphone":
+				if (origin==None):
+					origin = Origin()
+				origin.phone = arg					
 			elif cmd=="subdir":
 				if arg=="true":
 					settings.subdir = True
@@ -1006,16 +1011,18 @@ try:
 		content=r'''\documentclass[fontsize=12pt]{scrlttr2} 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{ngerman,ae,times,graphicx,url,microtype,tabularx,eurosym,longtable} 
+\usepackage{ngerman,ae,times,graphicx,url,microtype,%
+%tabularx,%
+eurosym,longtable} 
 \KOMAoptions{paper=a4,fromalign=right,
 backaddress=true,parskip=half,enlargefirstpage=true,
-fromphone=false,fromemail=false,fromrule=false,firstfoot=true,draft=true} 
+fromphone=false,fromemail=false,fromrule=false,firstfoot=true,draft=false} 
  
 % hier Name und darunter Anschrift einsetzen:
 \setkomavar{fromname}{$NAME} 		
 \setkomavar{fromaddress}{$STREET\\
                         $CITY} 
-\setkomavar{fromphone}{Telephon}
+\setkomavar{fromphone}{$PHONE}
 \setkomavar{fromemail}{$MAIL_S}
  
 \setkomavar{signature}{$NAME}		
@@ -1108,7 +1115,8 @@ $TABLE \hline
 			'NAME': origin.name, 
 			'STREET': origin.street, 
 			'CITY': origin.city, 
-			'MAIL_S': str(origin), 
+			'MAIL_S': origin.mail, 
+			'PHONE': origin.phone,
 			'TABLE': tabledata, 
 			'TOTWOSHIP': totalWithoutShipping, 
 			'PARTSHIP': "%.3f" % b.totalShipping, 

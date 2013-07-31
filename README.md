@@ -62,6 +62,5 @@ A python script for accounting group orders. Order together and save shipping co
 
 <h2>Bills</h2>
 - generates bills for every buyer
-- needs LaTeX-package rechnung.sty
-	- rechnung.sty by Berberich/Sibiller
-	- get it from CTAN /pub/blablabla
+- see example2.txt for the possible specifications
+- needs pdflatex and some packages (ngerman,ae,times,graphicx,url,microtype,eurosym,longtable and more)

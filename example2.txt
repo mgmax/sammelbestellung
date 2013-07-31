@@ -1,7 +1,16 @@
-# origin is the mail-address that will go into the FROM-Field, you can leave this out (in fact it is just eye-candy)
-!origin John Doe <john.doe@example.org>
-# optional subdir cmd (output goes into a subdirectory
+# originname is the name of the sender
+!originname John Doe
+!originmail john.doe@example.org
+!originstreet Hafenstraße 90
+!origincity 66666 Neudorf
+!originphone +49\,180\,3027\,1919
+!originkto 123456
+!originblz 73489000
+!originbank Sparkasse Neudorf
+# optional subdir cmd (output goes into a subdirectory)
 !subdir true
+!mailtext emailtext.txt
+!billing true
 
 # more complicated example that shows the different formatting possibilities for items (tab or semicolon, as much additional whitespace as you like)
 !shop reichelt.de
