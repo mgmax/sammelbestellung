@@ -650,6 +650,9 @@ class Buyer:
 		self.shopShipping={}
 		self.totalShipping=None
 		self.finalSum=None
+		self.co=""
+		self.street=""
+		self.city=""
 	def __str__(self):
 		return "<Buyer, name '"+ str(self.name) + "', basket  "+str(self.basket)+" >"
 	def __repr__(self):
@@ -751,6 +754,18 @@ try:
 				if (context.buyer==None):
 					raise Exception("you should specify the mail-address only after a buyer.")
 				context.buyer.mail=arg
+			elif cmd=="co":
+				if (context.buyer==None):
+					raise Exception("you should specify the co-address only after a buyer.")
+				context.buyer.co=arg
+			elif cmd=="street":
+				if (context.buyer==None):
+					raise Exception("you should specify the street-address only after a buyer.")
+				context.buyer.street=arg
+			elif cmd=="city":
+				if (context.buyer==None):
+					raise Exception("you should specify the city-address only after a buyer.")
+				context.buyer.city=arg				
 			elif cmd=="basket":
 				context.basket.add(shopByName(context.shop).fetchBasket(arg))
 			elif cmd=="warning":
