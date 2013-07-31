@@ -1069,7 +1069,7 @@ diese Rechnung weist Ihren Anteil der Sammelbestellung auf. Die Posten sind der 
 \tiny {Menge} & \tiny {ID} & \tiny {Einzelpreis} & \tiny {Gesamtpreis} \\ \hline
 % 10 & 1234 & \multicolumn{1}{r}{30,00 \euro} & \multicolumn{1}{r}{300,00 \euro} \\ \hline \hline
 $TABLE
-\multicolumn{ 3}{l}{\small{Zwischensumme ($PERCENTAGE\% der gesamten Bestellung)}} & $TOTWOSHIP \euro\\ \hline
+\multicolumn{ 3}{l}{\small{Zwischensumme, $PERCENTAGE\% der Gesamtbestellung ($GLOBTOTAL \euro)}} & $TOTWOSHIP \euro\\ \hline
 \multicolumn{ 3}{l}{\small{Versand ($PERCENTAGE\% des Gesamtversandes $TOTALSHIP \euro)}} & $PARTSHIP \euro \\ \hline \hline
 \multicolumn{ 3}{l}{ \textbf{Gesamtsumme} } & \textbf{$TOTAL \euro} \\ \hline
 \end{tabularx}
@@ -1095,6 +1095,11 @@ $TABLE
 				#tabledata +=  "%s\t1\t%.3f\t1\t<ShippingPart>\t%s\n" % (b.name,b.shopShipping[shop],shop)
 				#tabledata +=  "%s\t\t%.3f\t1\t<ShopTotal>\t%s\n" % (b.name, s, shop)
 			
+			globalSum = 0
+			for (shop, s) in totalSums.items():
+				globalSum += s-shopByName(shop).shipping
+				#outputs["report"] += "%s\t%.2f\t(%.2f+%.2f)\n" % (shop, s,s-shopByName(shop).shipping,shopByName(shop).shipping)
+			
 			t = Template(content)
 			content_out = t.substitute({'SUBJECT': 'Sammelbestellung ' + order_name, 
 			'INVOICE': order_name,
@@ -1106,11 +1111,12 @@ $TABLE
 			'TOTWOSHIP': totalWithoutShipping, 
 			'PARTSHIP': "%.3f" % b.totalShipping, 
 			'TOTALSHIP': "%.2f" % ShippingTotal, 
-			'PERCENTAGE': "%.2f" % (b.totalShipping/ShippingTotal), 
+			'PERCENTAGE': "%.1f" % (100*b.totalShipping/ShippingTotal), 
 			'TOTAL': round(b.finalSum,2),
 			'KTO': origin.kto,
 			'BLZ': origin.blz,
-			'BANK': origin.bank})
+			'BANK': origin.bank,
+			'GLOBTOTAL': "%.3f" % globalSum})
 			outputs["bill." + b.name + ".tex"] = content_out
 			logging.info("bill " + b.name + " done")
 			
@@ -1158,7 +1164,8 @@ $TABLE
 	#TODO Posten ausrechnen und malen
 	#TODO pdflatex vorsichtig suchen?
 	#TODO extra config-Datei?
-	#TODO echtes Eurozeichen
+	#TODO LaTex zweimal ausführen
+	#TODO LongTable?
 
 except Exception, e:
 	#pass
