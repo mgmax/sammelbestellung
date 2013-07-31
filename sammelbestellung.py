@@ -664,6 +664,9 @@ class Origin:
 		self.name="John Doe"
 		self.street="Apfelstraße 23"
 		self.city="Heidenheim"
+		self.kto= "123456789"
+		self.blz="123\,123\,12"
+		self.bank="Musterbank"
 	def __str__(self):
 		return self.name + " <" + self.mail + ">"
 	def __repr__(self):
@@ -781,7 +784,19 @@ try:
 			elif cmd=="origincity":
 				if (origin==None):
 					origin = Origin()
-				origin.city = arg				
+				origin.city = arg		
+			elif cmd=="originkto":
+				if (origin==None):
+					origin = Origin()
+				origin.kto = arg
+			elif cmd=="originblz":
+				if (origin==None):
+					origin = Origin()
+				origin.blz = arg
+			elif cmd=="originbank":
+				if (origin==None):
+					origin = Origin()
+				origin.bank = arg							
 			elif cmd=="subdir":
 				if arg=="true":
 					settings.subdir = True
@@ -991,10 +1006,10 @@ try:
 		content=r'''\documentclass[fontsize=12pt]{scrlttr2} 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{ngerman,ae,times,graphicx,url} 
+\usepackage{ngerman,ae,times,graphicx,url,microtype,tabularx,eurosym} 
 \KOMAoptions{paper=a4,fromalign=right,
 backaddress=true,parskip=half,enlargefirstpage=true,
-fromphone=false,fromemail=false,fromrule=false} 
+fromphone=false,fromemail=false,fromrule=false,firstfoot=true,draft=true} 
  
 % hier Name und darunter Anschrift einsetzen:
 \setkomavar{fromname}{$NAME} 		
@@ -1009,9 +1024,8 @@ fromphone=false,fromemail=false,fromrule=false}
 \setkomavar{date}{\today}
 \let\raggedsignature=\raggedright		
  
-% Manche finden, dass scrlttr2 so eine riesige Fußzeile hat 
-% einfach die nächste Zeile auskommentieren, dann wird sie kleiner:
-% \setlength{\footskip}{-6pt}	    
+ \setlength{\footskip}{12pt}	 
+  
  
 \begin{document}
  % die Anschrift des Empfaengers
@@ -1019,34 +1033,91 @@ fromphone=false,fromemail=false,fromrule=false}
 Blabla\\
 Erlangen} 		
  
-\opening{Sehr geehrte BlaBla}
-Blab bla rechnung 
-DU WIRST BEZAHLEN!
+ \setkomavar{invoice}{$INVOICE}
+ %---------------------------------------------------------------------------
+\setkomavar{firstfoot}{
+\rule[3pt]{\textwidth}{.4pt} \\
+\begin{tabular}[t]{l@{}}% 
+\usekomavar{fromname}\\
+\usekomavar{fromaddress}\\
+\end{tabular}%
+\hfill
+\begin{tabular}[t]{l@{}}%
+  \usekomavar{fromphone}\\
+  \usekomavar{fromemail}\\
+\end{tabular}%
+\hfill
+\begin{tabular}[t]{l@{}}%
+Bankverbindung: \\
+\usekomavar{frombank}
+\end{tabular}%
+}
+%---------------------------------------------------------------------------
+% Bankverbindung
+\setkomavar{frombank}{Kto. $KTO\\
+BLZ $BLZ\\
+$BANK}
 
+
+\opening{Sehr geehrte Damen und Herren,}
+diese Rechnung weist Ihren Anteil der Sammelbestellung auf. Die Posten sind der Hauptrechnung entnommen und die Versandkosten werden anteilig aufgeteilt. Bitte zahlen Sie die aufgeführte Gesamtsumme per Überweisung an das unten genannte Konto.
+
+\vspace{5pt}
+\begin{tabularx}{\textwidth}{cXrr}
+\hline
+%\rowcolor[gray]{.95}
+\tiny {Menge} & \tiny {ID} & \tiny {Einzelpreis} & \tiny {Gesamtpreis} \\ \hline
+% 10 & 1234 & \multicolumn{1}{r}{30,00 \euro} & \multicolumn{1}{r}{300,00 \euro} \\ \hline \hline
 $TABLE
-\closing{Greetings,}
+\multicolumn{ 3}{l}{\small{Zwischensumme ($PERCENTAGE\% der gesamten Bestellung)}} & $TOTWOSHIP \euro\\ \hline
+\multicolumn{ 3}{l}{\small{Versand ($PERCENTAGE\% des Gesamtversandes $TOTALSHIP \euro)}} & $PARTSHIP \euro \\ \hline \hline
+\multicolumn{ 3}{l}{ \textbf{Gesamtsumme} } & \textbf{$TOTAL \euro} \\ \hline
+\end{tabularx}
+
+
+\closing{Mit freundlichen Grüßen}
 \end{letter}
 \end{document}
 '''
 		for b in buyers:
 			logging.info("generating bill for " + b.name)
 			tabledata=""
-			tabledata += "%s\t%.2f\t(%.2f+%.2f)\n" % (b.name, b.finalSum,b.finalSum-b.totalShipping,b.totalShipping)
+			#tabledata += "%s\t%.2f\t(%.2f+%.2f)\n" % (b.name, b.finalSum,b.finalSum-b.totalShipping,b.totalShipping)
+			totalWithoutShipping = "%.3f" % (b.finalSum-b.totalShipping)
 			
 			for p in b.basket.parts():
-				tabledata +=  "%s\t%d\t%.3f\t%.4f\t%s\t%s\n" % (b.name,p.count,p.price,shopByName(p.shop).factor,p.partNr,p.shop)
+				#tabledata +=  "%d %.3f %.4f %s %s\n" % (p.count,p.price,shopByName(p.shop).factor,p.partNr,p.shop)
+				tabledata +=  "%d & %s & \multicolumn{1}{r}{%.3f \euro} & \multicolumn{1}{r}{%.3f \euro} \\\\ \hline \hline\n" % (p.count,p.partNr,p.price,p.price*p.count)
+				
+			ShippingTotal=0
 			for (shop, s) in b.shopFinalSums.items():
-				tabledata +=  "%s\t1\t%.3f\t1\t<ShippingPart>\t%s\n" % (b.name,b.shopShipping[shop],shop)
-				tabledata +=  "%s\t\t%.3f\t1\t<ShopTotal>\t%s\n" % (b.name, s, shop)
+				ShippingTotal += shopByName(shop).shipping
+				#tabledata +=  "%s\t1\t%.3f\t1\t<ShippingPart>\t%s\n" % (b.name,b.shopShipping[shop],shop)
+				#tabledata +=  "%s\t\t%.3f\t1\t<ShopTotal>\t%s\n" % (b.name, s, shop)
 			
 			t = Template(content)
-			content_out = t.substitute({'SUBJECT': 'Reicheltbestellung ' + order_name, 'NAME': origin.name, 'STREET': origin.street, 'CITY': origin.city, 'MAIL_S': str(origin), 'TABLE': tabledata})
+			content_out = t.substitute({'SUBJECT': 'Sammelbestellung ' + order_name, 
+			'INVOICE': order_name,
+			'NAME': origin.name, 
+			'STREET': origin.street, 
+			'CITY': origin.city, 
+			'MAIL_S': str(origin), 
+			'TABLE': tabledata, 
+			'TOTWOSHIP': totalWithoutShipping, 
+			'PARTSHIP': "%.3f" % b.totalShipping, 
+			'TOTALSHIP': "%.2f" % ShippingTotal, 
+			'PERCENTAGE': "%.2f" % (b.totalShipping/ShippingTotal), 
+			'TOTAL': round(b.finalSum,2),
+			'KTO': origin.kto,
+			'BLZ': origin.blz,
+			'BANK': origin.bank})
 			outputs["bill." + b.name + ".tex"] = content_out
 			logging.info("bill " + b.name + " done")
 			
 			#id, einzelpreis, anzahl, gesamtpreis
 			#subtotal, versananteil von gesamt und total
 			#"zwischensumme 42€ (17% der gesamten bestellung), versandanteil 5,90*17%=..."
+			#getrennt nach shops
 			
 		
 		
@@ -1087,6 +1158,7 @@ $TABLE
 	#TODO Posten ausrechnen und malen
 	#TODO pdflatex vorsichtig suchen?
 	#TODO extra config-Datei?
+	#TODO echtes Eurozeichen
 
 except Exception, e:
 	#pass
