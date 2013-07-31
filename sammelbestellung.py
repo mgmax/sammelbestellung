@@ -1078,7 +1078,7 @@ diese Rechnung weist Ihren Anteil der Sammelbestellung auf. Die Posten sind der 
 % 10 & 1234 & \multicolumn{1}{r}{30,00 \euro} & \multicolumn{1}{r}{300,00 \euro} \\ \hline \hline
 $TABLE \hline
 \multicolumn{ 3}{l}{\small{Zwischensumme, $PERCENTAGE\% der Gesamtbestellung ($GLOBTOTAL \euro)}} & $TOTWOSHIP \euro\\ \hline
-\multicolumn{ 3}{l}{\small{Versand ($PERCENTAGE\% des Gesamtversandes $TOTALSHIP \euro)}} & $PARTSHIP \euro \\ \hline \hline
+\multicolumn{ 3}{l}{\small{Versand anteilig ($PERCENTAGE\% des Gesamtversandes $TOTALSHIP \euro)}} & $PARTSHIP \euro \\ \hline \hline
 \multicolumn{ 3}{l}{ \textbf{Gesamtsumme} } & \textbf{$TOTAL \euro} \\ \hline
 %\end{tabularx}
 \end{longtable}
