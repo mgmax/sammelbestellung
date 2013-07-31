@@ -1068,7 +1068,7 @@ diese Rechnung weist Ihren Anteil der Sammelbestellung auf. Die Posten sind der 
 %\rowcolor[gray]{.95}
 \tiny {Menge} & \tiny {ID} & \tiny {Einzelpreis} & \tiny {Gesamtpreis} \\ \hline
 % 10 & 1234 & \multicolumn{1}{r}{30,00 \euro} & \multicolumn{1}{r}{300,00 \euro} \\ \hline \hline
-$TABLE
+$TABLE \hline
 \multicolumn{ 3}{l}{\small{Zwischensumme, $PERCENTAGE\% der Gesamtbestellung ($GLOBTOTAL \euro)}} & $TOTWOSHIP \euro\\ \hline
 \multicolumn{ 3}{l}{\small{Versand ($PERCENTAGE\% des Gesamtversandes $TOTALSHIP \euro)}} & $PARTSHIP \euro \\ \hline \hline
 \multicolumn{ 3}{l}{ \textbf{Gesamtsumme} } & \textbf{$TOTAL \euro} \\ \hline
@@ -1087,7 +1087,7 @@ $TABLE
 			
 			for p in b.basket.parts():
 				#tabledata +=  "%d %.3f %.4f %s %s\n" % (p.count,p.price,shopByName(p.shop).factor,p.partNr,p.shop)
-				tabledata +=  "%d & %s & \multicolumn{1}{r}{%.3f \euro} & \multicolumn{1}{r}{%.3f \euro} \\\\ \hline \hline\n" % (p.count,p.partNr,p.price,p.price*p.count)
+				tabledata +=  "%d & %s & \multicolumn{1}{r}{%.3f \euro} & \multicolumn{1}{r}{%.3f \euro} \\\\ \hline\n" % (p.count,p.partNr,p.price,p.price*p.count)
 				
 			ShippingTotal=0
 			for (shop, s) in b.shopFinalSums.items():
