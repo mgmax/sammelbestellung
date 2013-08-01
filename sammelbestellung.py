@@ -650,9 +650,9 @@ class Buyer:
 		self.shopShipping={}
 		self.totalShipping=None
 		self.finalSum=None
-		self.co=""
-		self.street=""
-		self.city=""
+		self.co=None
+		self.street=None
+		self.city=None
 	def __str__(self):
 		return "<Buyer, name '"+ str(self.name) + "', basket  "+str(self.basket)+" >"
 	def __repr__(self):
@@ -667,6 +667,7 @@ class Origin:
 		self.name="John Doe"
 		self.street="Apfelstraße 23"
 		self.city="Heidenheim"
+		self.areacode="66666"
 		self.kto= "123456789"
 		self.blz="123\,123\,12"
 		self.bank="Musterbank"
@@ -800,7 +801,11 @@ try:
 			elif cmd=="origincity":
 				if (origin==None):
 					origin = Origin()
-				origin.city = arg		
+				origin.city = arg
+			elif cmd=="originac":
+				if (origin==None):
+					origin = Origin()
+				origin.areacode = arg				
 			elif cmd=="originkto":
 				if (origin==None):
 					origin = Origin()
@@ -1036,13 +1041,13 @@ fromphone=false,fromemail=false,fromrule=false,firstfoot=true,draft=false}
 % hier Name und darunter Anschrift einsetzen:
 \setkomavar{fromname}{$NAME} 		
 \setkomavar{fromaddress}{$STREET\\
-                        $CITY} 
+                        $AREACODE $CITY} 
 \setkomavar{fromphone}{$PHONE}
 \setkomavar{fromemail}{$MAIL_S}
  
 \setkomavar{signature}{$NAME}		
 \setkomavar{subject}{$SUBJECT}
-\setkomavar{place}{Stein} 
+\setkomavar{place}{$CITY} 
 \setkomavar{date}{\today}
 \let\raggedsignature=\raggedright		
  
@@ -1051,9 +1056,10 @@ fromphone=false,fromemail=false,fromrule=false,firstfoot=true,draft=false}
  
 \begin{document}
  % die Anschrift des Empfaengers
- \begin{letter}{Max Mustermann\\
-Blabla\\
-Erlangen} 		
+ \begin{letter}{$RNAME\\
+$RCO
+$RSTREET
+$RCITY} 		
  
  \setkomavar{invoice}{$INVOICE}
  %---------------------------------------------------------------------------
@@ -1125,10 +1131,23 @@ $TABLE \hline
 				#outputs["report"] += "%s\t%.2f\t(%.2f+%.2f)\n" % (shop, s,s-shopByName(shop).shipping,shopByName(shop).shipping)
 			
 			t = Template(content)
+			if b.co==None:
+				rco=""
+			else:
+				rco=b.co + "\\\\"
+			if b.street==None:
+				rstreet=""
+			else:
+				rstreet=b.street + "\\\\"
+			if b.city==None:
+				rcity=""
+			else:
+				rcity=b.city + "\\\\"
 			content_out = t.substitute({'SUBJECT': 'Sammelbestellung ' + order_name, 
 			'INVOICE': order_name,
 			'NAME': origin.name, 
-			'STREET': origin.street, 
+			'STREET': origin.street,
+			'AREACODE': origin.areacode,
 			'CITY': origin.city, 
 			'MAIL_S': origin.mail, 
 			'PHONE': origin.phone,
@@ -1141,7 +1160,11 @@ $TABLE \hline
 			'KTO': origin.kto,
 			'BLZ': origin.blz,
 			'BANK': origin.bank,
-			'GLOBTOTAL': "%.3f" % globalSum})
+			'GLOBTOTAL': "%.3f" % globalSum,
+			'RNAME': b.name,
+			'RCO': rco,
+			'RSTREET': rstreet,
+			'RCITY': rcity})
 			outputs["bill." + b.name + ".tex"] = content_out
 			logging.info("bill " + b.name + " done")
 			

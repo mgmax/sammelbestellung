@@ -2,7 +2,8 @@
 !originname John Doe
 !originmail john.doe@example.org
 !originstreet Hafenstraße 90
-!origincity 66666 Neudorf
+!originac 66666
+!origincity Neudorf
 !originphone +49\,180\,3027\,1919
 !originkto 123456
 !originblz 73489000
@@ -27,6 +28,9 @@
 # de.farnell.com was never finished
 
 !buyer bob
+!co c/o lisa
+!street Hanswurststraße 3
+!city 99666 Apfelstadt
 !mail bob@somewhere.org
 !shop reichelt.de
 1; PFL 10
