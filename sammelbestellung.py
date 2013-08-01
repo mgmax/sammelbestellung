@@ -1118,11 +1118,11 @@ $TABLE \hline
 			logging.info("generating bill for " + b.name)
 			tabledata=""
 			#tabledata += "%s\t%.2f\t(%.2f+%.2f)\n" % (b.name, b.finalSum,b.finalSum-b.totalShipping,b.totalShipping)
-			totalWithoutShipping = "%.3f" % (b.finalSum-b.totalShipping)
+			totalWithoutShipping = locale.format("%.3f",b.finalSum-b.totalShipping, True, True)
 			
 			for p in b.basket.parts():
 				#tabledata +=  "%d %.3f %.4f %s %s\n" % (p.count,p.price,shopByName(p.shop).factor,p.partNr,p.shop)
-				tabledata +=  "%d & %s & \multicolumn{1}{r}{%.3f \euro} & \multicolumn{1}{r}{%.3f \euro} \\\\ \hline\n" % (p.count,p.partNr,p.price,p.price*p.count)
+				tabledata +=  "%d & %s & \multicolumn{1}{r}{%s \euro} & \multicolumn{1}{r}{%s \euro} \\\\ \hline\n" % (p.count,p.partNr,locale.format("%.3f", p.price, True, True),locale.format("%.3f", p.price*p.count, True, True))
 				
 			ShippingTotal=0
 			for (shop, s) in b.shopFinalSums.items():
@@ -1158,14 +1158,14 @@ $TABLE \hline
 			'PHONE': origin.phone,
 			'TABLE': tabledata, 
 			'TOTWOSHIP': totalWithoutShipping, 
-			'PARTSHIP': "%.3f" % b.totalShipping, 
-			'TOTALSHIP': "%.2f" % ShippingTotal, 
-			'PERCENTAGE': "%.1f" % (100*b.totalShipping/ShippingTotal), 
-			'TOTAL': round(b.finalSum,2),
+			'PARTSHIP': locale.format("%.3f", b.totalShipping, True, True),
+			'TOTALSHIP': locale.format("%.2f", ShippingTotal, True, True),
+			'PERCENTAGE': locale.format("%.1f",(100*b.totalShipping/ShippingTotal)),
+			'TOTAL': locale.format("%.2f", round(b.finalSum,2), True, True),
 			'KTO': origin.kto,
 			'BLZ': origin.blz,
 			'BANK': origin.bank,
-			'GLOBTOTAL': "%.3f" % globalSum,
+			'GLOBTOTAL': locale.format("%.3f", globalSum, True, True),
 			'RNAME': b.name,
 			'RCO': rco,
 			'RSTREET': rstreet,
