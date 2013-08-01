@@ -30,6 +30,9 @@ from email.mime.multipart import MIMEMultipart
 import subprocess
 import shlex
 from string import Template
+import locale
+
+#locale.setlocale(locale.LC_ALL, locale.getdefaultlocale())
 
 defaultHttpHeader = \
 	{ "User-Agent": "Mozilla/5.0 (X11; U; Linux ppc; en-US; rv:1.9.0.12) " +\
@@ -821,7 +824,9 @@ try:
 			elif cmd=="originphone":
 				if (origin==None):
 					origin = Origin()
-				origin.phone = arg					
+				origin.phone = arg	
+			elif cmd=="locale":
+				locale.setlocale(locale.LC_ALL, arg)
 			elif cmd=="subdir":
 				if arg=="true":
 					settings.subdir = True

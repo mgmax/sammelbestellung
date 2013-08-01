@@ -64,3 +64,4 @@ A python script for accounting group orders. Order together and save shipping co
 - generates bills for every buyer
 - see example2.txt for the possible specifications
 - needs pdflatex and some packages (ngerman,ae,times,graphicx,url,microtype,eurosym,longtable and more)
+- set locale with something like "!locale de_DE"
