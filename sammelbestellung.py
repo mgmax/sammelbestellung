@@ -1097,10 +1097,10 @@ diese Rechnung weist Ihren Anteil der Sammelbestellung auf. Die Posten sind der 
 
 \vspace{5pt}
 %\begin{tabularx}{\textwidth}{cXrr}
-\begin{longtable}{ccrr}
+\begin{longtable}{clrr}
 \hline
 %\rowcolor[gray]{.95}
-\tiny {Menge} & \tiny {ID} & \tiny {Einzelpreis} & \tiny {Gesamtpreis} \\ \hline
+\tiny {Menge} & \tiny {Artikelnummer} & \tiny {Einzelpreis} & \tiny {Gesamtpreis} \\ \hline
 % 10 & 1234 & \multicolumn{1}{r}{30,00 \euro} & \multicolumn{1}{r}{300,00 \euro} \\ \hline \hline
 $TABLE \hline
 \multicolumn{ 3}{l}{\small{Zwischensumme, $PERCENTAGE\% der Gesamtbestellung ($GLOBTOTAL \euro)}} & $TOTWOSHIP \euro\\ \hline
