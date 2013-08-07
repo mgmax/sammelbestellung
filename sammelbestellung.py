@@ -686,7 +686,7 @@ class Settings:
 		self.mailtext="emailtext.txt"
 		self.subdir=False
 		self.billing=False
-
+		self.paylist=False
 try:
 	reload(sys)
 	sys.setdefaultencoding("utf8")
@@ -843,6 +843,13 @@ try:
 					settings.billing = False
 				else:
 					raise Exception("write 'billing true or false' (lower case)")
+			elif cmd=="paylist":
+				if arg=="true":
+					settings.paylist = True
+				elif arg=="false":
+					settings.paylist = False
+				else:
+					raise Exception("write 'paylist true or false' (lower case)")
 			else:
 				raise Exception("unknown command " + str(cmd))
 		elif (shortItemMatch or itemMatch):
@@ -1030,6 +1037,20 @@ try:
 		text += "%s\t%.2f\t(%.2f+%.2f)\n" % (shop, s,s-shopByName(shop).shipping,shopByName(shop).shipping)
 	msg.attach(MIMEText(text.encode('utf-8'), 'plain', 'UTF-8'))
 	outputs["mail.eml"] = str(msg)
+	
+	#paylist
+	if settings.paylist:
+		outputs["paylist"] = "Note who has payed yet:\n"
+		outputs["paylist"] += header("total sum")
+		outputs["paylist"] += "Name\ttotal\t(items+shipping)\n"
+		for b in buyers:
+			outputs["paylist"] += "%s\t%.2f\t(%.2f+%.2f)\t\t\t---\n" % (b.name, b.finalSum,b.finalSum-b.totalShipping,b.totalShipping)
+		
+		outputs["paylist"] += header("shops")
+		outputs["paylist"] += "Shop\tSum with shipping\t(items + shipping)\n"
+		for (shop, s) in totalSums.items():
+			outputs["paylist"] += "%s\t%.2f\t(%.2f+%.2f)\n" % (shop, s,s-shopByName(shop).shipping,shopByName(shop).shipping)
+		
     
 	if settings.billing:
 		logging.info("should generate bills")
