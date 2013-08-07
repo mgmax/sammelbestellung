@@ -10,8 +10,12 @@
 !originbank Sparkasse Neudorf
 # optional subdir cmd (output goes into a subdirectory)
 !subdir true
+#define an alternative for the mailtextfile (default is emailtext.txt; in this case this line can be ommited)
 !mailtext emailtext.txt
+#generate TeX-bills for every buyer (false if ommited)
 !billing true
+#generate a file where you can note the people who have payed yet (false if ommited)
+!paylist true
 
 # more complicated example that shows the different formatting possibilities for items (tab or semicolon, as much additional whitespace as you like)
 !shop reichelt.de
