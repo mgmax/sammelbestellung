@@ -687,6 +687,7 @@ class Settings:
 		self.subdir=False
 		self.billing=False
 		self.paylist=False
+
 try:
 	reload(sys)
 	sys.setdefaultencoding("utf8")
@@ -1210,7 +1211,11 @@ $TABLE \hline
 		except OSError as e:
 			logging.info("directory seems to exist")
 		subdirectory = subdirectory + os.sep
-	basename=subdirectory+sys.argv[1]+"-output-"
+		#create .gitignore in subdir --> is irrelevant for dev
+		f=open(subdirectory+".gitignore",'w')
+		f.write("*")
+		f.close()
+	basename=subdirectory+sys.argv[1]+"-output-"		
 	for (filename, content) in outputs.items():
 		if (not ('.' in filename)):
 			filename = filename + ".txt"
