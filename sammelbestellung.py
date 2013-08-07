@@ -5,7 +5,7 @@
 # https://github.com/mgmax/sammelbestellung
 # 
 # (c) 2013 Max Gaukler <development@maxgaukler.de>
-# EML-Output, subdir (c) 2013 Patrick Kanzler <patrick.kanzler@fablab.fau.de>
+# EML-Output, subdir, billing, ...(c) 2013 Patrick Kanzler <patrick.kanzler@fablab.fau.de>
 #
 # some parts based on Part-DB autoprice - price fetcher
 # (c) 2009 Michael Buesch <mb@bu3sch.de>
@@ -1057,8 +1057,8 @@ try:
 		content=r'''\documentclass[fontsize=12pt]{scrlttr2} 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{ngerman,ae,times,graphicx,url,microtype,%
-%tabularx,%
+\usepackage{ngerman,ae,times,microtype,%
+%tabularx,graphicx,url,%
 eurosym,longtable} 
 \KOMAoptions{paper=a4,fromalign=right,
 backaddress=true,parskip=half,enlargefirstpage=true,
