@@ -53,3 +53,15 @@ A python script for accounting group orders. Order together and save shipping co
 - a .eml-file will be generated
 - open in Thunderbird (please contact, if other mailing programms do not work)
 - press Ctrl-E to edit as new
+- the text of the mail comes from emailtext.txt or from a file specified by "!mailtext filename"
+
+<h2>Output into subdirectory</h2>
+- add "!subdir true" to your basket-file
+- the script will write the output to the directory "filename-output"
+- the "!subdir"-cmd is optional an takes the values "true" and "false"
+
+<h2>Bills</h2>
+- generates bills for every buyer
+- see example2.txt for the possible specifications
+- needs pdflatex and some packages (ngerman,ae,times,graphicx,url,microtype,eurosym,longtable and more)
+- set locale with something like "!locale de_DE"
