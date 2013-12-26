@@ -686,6 +686,7 @@ class Origin:
 class Settings:
     def __init__(self):
         self.mailtext="emailtext.txt"
+        self.billtemplate="billtemplate.tex"
         self.subdir=False
         self.billing=False
         self.paylist=False

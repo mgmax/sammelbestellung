@@ -1,0 +1,80 @@
+\documentclass[fontsize=12pt]{scrlttr2} 
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{ngerman,ae,times,microtype,%
+%tabularx,graphicx,url,%
+eurosym,longtable} 
+\KOMAoptions{paper=a4,fromalign=right,
+backaddress=true,parskip=half,enlargefirstpage=true,
+fromphone=false,fromemail=false,fromrule=false,firstfoot=true,draft=false} 
+ 
+% hier Name und darunter Anschrift einsetzen:
+\setkomavar{fromname}{$NAME} 		
+\setkomavar{fromaddress}{$STREET\\
+                        $AREACODE $CITY} 
+\setkomavar{fromphone}{$PHONE}
+\setkomavar{fromemail}{$MAIL_S}
+ 
+\setkomavar{signature}{$NAME}		
+\setkomavar{subject}{Sammelbestellung $SUBJECT}
+\setkomavar{place}{$CITY} 
+\setkomavar{date}{\today}
+\let\raggedsignature=\raggedright		
+ 
+ \setlength{\footskip}{12pt}	 
+  
+ 
+\begin{document}
+ % die Anschrift des Empfaengers
+ \begin{letter}{$RNAME\\
+$RCO
+$RSTREET
+$RCITY} 		
+ 
+ \setkomavar{invoice}{$INVOICE}
+ %---------------------------------------------------------------------------
+\setkomavar{firstfoot}{\tiny {
+\rule[3pt]{\textwidth}{.4pt} \\
+\begin{tabular}[t]{l@{}}% 
+\usekomavar{fromname}\\
+\usekomavar{fromaddress}\\
+\end{tabular}%
+\hfill
+\begin{tabular}[t]{l@{}}%
+  \usekomavar{fromphone}\\
+  \usekomavar{fromemail}\\
+\end{tabular}%
+\hfill
+\begin{tabular}[t]{l@{}}%
+Bankverbindung: \\
+\usekomavar{frombank}
+\end{tabular}%
+}}
+%---------------------------------------------------------------------------
+% Bankverbindung
+\setkomavar{frombank}{Kto. $KTO\\
+BLZ $BLZ\\
+$BANK}
+
+
+\opening{Sehr geehrte Damen und Herren,}
+diese Rechnung weist Ihren Anteil der Sammelbestellung auf. Die Posten sind der Hauptrechnung entnommen und die Versandkosten werden anteilig aufgeteilt. Bitte zahlen Sie die aufgeführte Gesamtsumme per Überweisung an das unten genannte Konto.
+
+\vspace{5pt}
+%\begin{tabularx}{\textwidth}{cXrr}
+\begin{longtable}{clrr}
+\hline
+%\rowcolor[gray]{.95}
+\tiny {Menge} & \tiny {Artikelnummer} & \tiny {Einzelpreis} & \tiny {Gesamtpreis} \\ \hline
+% 10 & 1234 & \multicolumn{1}{r}{30,00 \euro} & \multicolumn{1}{r}{300,00 \euro} \\ \hline \hline
+$TABLE \hline
+\multicolumn{ 3}{l}{\small{Zwischensumme, $PERCENTAGE\% der Gesamtbestellung ($GLOBTOTAL \euro)}} & $TOTWOSHIP \euro\\ \hline
+\multicolumn{ 3}{l}{\small{Versand anteilig ($PERCENTAGE\% des Gesamtversandes $TOTALSHIP \euro)}} & $PARTSHIP \euro \\ \hline \hline
+\multicolumn{ 3}{l}{ \textbf{Gesamtsumme} } & \textbf{$TOTAL \euro} \\ \hline
+%\end{tabularx}
+\end{longtable}
+
+
+\closing{Mit freundlichen Grüßen}
+\end{letter}
+\end{document}
