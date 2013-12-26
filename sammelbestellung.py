@@ -727,8 +727,8 @@ try:
         line=removeChars(line,"\r\n")
         logging.debug("Parsing line: "+line)
         cmdMatch=re.match("^!([a-z]+) (.*)$",line)
-        itemMatch=re.match("^([0-9]+)[;\t] *([^;\t]*)[;\t] *([^;\t]*[^;\t ]) *$",line)
-        shortItemMatch=re.match("^([0-9]+)[;\t] *([^;\t]*[^;\t ]) *$",line)
+        itemMatch=re.match("^([0-9]+)[;\t] *([^#;\t]*)[;\t] *([^#;\t]*[^#;\t ]) *(#.*)?$",line)
+        shortItemMatch=re.match("^([0-9]+)[;\t] *([^#;\t]*[^#;\t ]) *(#.*)?$",line)
         if re.match("^\s*$",line):
             # only whitespace - empty line
             logging.debug("empty line, starting new context.")

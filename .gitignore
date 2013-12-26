@@ -1,5 +1,5 @@
 # example output
-*.example.txt-*
+example*.txt-*
 
 
 #backup copies

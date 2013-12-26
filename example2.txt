@@ -37,13 +37,13 @@
 !city 99666 Apfelstadt
 !mail bob@somewhere.org
 !shop reichelt.de
-1; PFL 10
+1; PFL 10 # this is the short form of entering items
 !shop pollin.de
 1; 810 058
 
 !buyer troll
 #if you don't care for the generation of an eml, you can just leave out the mail-address
-2;  reichelt.de;    ENTLÖTLITZE 00     
+2;  reichelt.de;    ENTLÖTLITZE 00     # this is the long form of entering items
 
 !buyer hering
 !shop reichelt.de
