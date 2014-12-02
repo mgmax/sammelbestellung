@@ -30,6 +30,7 @@ import subprocess
 import shlex
 from string import Template
 import locale
+import codecs
 
 # local imports
 import pricefetcher
@@ -55,7 +56,7 @@ class Buyer:
         self.street=None
         self.city=None
     def __str__(self):
-        return "<Buyer, name '"+ str(self.name) + "', basket  "+str(self.basket)+" >"
+        return "<Buyer, name '"+ unicode(self.name) + "', basket  "+unicode(self.basket)+" >"
     def __repr__(self):
         return str(self)
     
@@ -89,7 +90,7 @@ class Settings:
 
 
 def parse(filename):
-    f=open(filename)
+    f=codecs.open(filename, 'r', 'utf8')
     class ParseContext:
         def __init__(self):
             self.shop=None
@@ -112,7 +113,7 @@ def parse(filename):
             if (context.buyer is not None):
                 context.buyer.basket.add(context.basket.parts())
                 buyers += [copy.copy(context.buyer)]
-                logging.debug("finished old buyer from context: " + str(context.buyer))
+                logging.debug("finished old buyer from context: " + unicode(context.buyer))
             elif context.basket.parts() != []:
                 raise Exception("parts not belonging to anyone - forgot !buyer or added accidental empty line?")
             for p in context.basket.parts():
@@ -128,7 +129,7 @@ def parse(filename):
             # !cmd arg...
             cmd=cmdMatch.group(1)
             arg=cmdMatch.group(2)
-            logging.debug("Command " + str(cmd) + ", arg " + str(arg))
+            logging.debug("Command " + unicode(cmd) + ", arg " + unicode(arg))
             if cmd=="shop":
                 context.shop=arg
             elif cmd=="buyer":

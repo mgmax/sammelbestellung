@@ -470,7 +470,7 @@ def fetchPrice(shopName, partNr, count):
         logging.error("for shop: '%s', part %sx '%s')" % (str(shopName), str(count), str(partNr)))
         sys.exit(1)
     
-    logging.debug("Got price for %s: %d x \"%s\" = %.3f" % (shopName,count, partNr,price))
+    logging.debug("Got price for %s: %d x \"%s\" = %.3f / piece" % (shopName,count, partNr,price))
     return price
 
 def shopClassByName(shopName):
@@ -501,7 +501,7 @@ class Part(object):
         self.price=price
     
     def __str__(self):
-        r="<Part: shop '%s', part '%s', count '%d', price per item " % (self.shop, self.partNr, self.count)
+        r=u"<Part: shop '%s', part '%s', count '%d', price per item " % (self.shop, self.partNr, self.count)
         if (self.price is not None):
             r += "'%.3f'>" % self.price
         else:
@@ -534,7 +534,8 @@ class Basket(object):
         self._parts=[]
     
     def __str__(self):
-        return "<Basket, parts " + str(self._parts) +  ">"
+        # workaround because unicode is broken
+        return u"<Basket, parts " + unicode([x.__repr__() for x in self._parts]) +  u">"
     
     def add(self,x):
         if isinstance(x, Part):
@@ -627,3 +628,4 @@ defaultHttpHeader = \
 
 # Setup automatic cookie handling, just like in a browser
 httpSetup()
+logging.basicConfig(level=logging.DEBUG)
